@@ -19,9 +19,10 @@
   assign variants_option1_arr = product.variants | map: 'option1'
   assign variants_option2_arr = product.variants | map: 'option2'
   assign variants_option3_arr = product.variants | map: 'option3'
-
+  assign variants_option1_images_arr = product.variants | map: 'featured_image'
   assign product_form_id = 'product-form-' | append: section.id
 -%}
+
 
 {%- for value in option.values -%}
   {%- liquid
@@ -32,6 +33,7 @@
         when 1
           if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
             assign option_disabled = false
+            assign image_url = variants_option1_images_arr[forloop.index0]
           endif
         when 2
           if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
@@ -44,7 +46,7 @@
       endcase
     endfor
   -%}
-
+ 
   {%- if block.settings.picker_type == 'button' -%}
     <input
       type="radio"
@@ -60,7 +62,7 @@
       {% endif %}
     >
     <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
-      {{ value -}}
+       <img class="radio-image" src={{ image_url | image_url }}>
       <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
     </label>
   {%- elsif block.settings.picker_type == 'dropdown' -%}

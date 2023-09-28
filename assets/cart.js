@@ -104,6 +104,7 @@ class CartItems extends HTMLElement {
   }
 
   updateQuantity(line, quantity, name, variantId) {
+    
     this.enableLoading(line);
 
     const body = JSON.stringify({
@@ -114,11 +115,12 @@ class CartItems extends HTMLElement {
     });
 
     fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
-      .then((response) => {
+      .then(async (response) => {
         return response.text();
       })
       .then((state) => {
         const parsedState = JSON.parse(state);
+       
         const quantityElement =
           document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
         const items = document.querySelectorAll('.cart-item');
@@ -168,6 +170,7 @@ class CartItems extends HTMLElement {
         }
 
         publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState, variantId: variantId });
+        this.adjust_bundle_product(parsedState);
       })
       .catch(() => {
         this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
@@ -177,6 +180,26 @@ class CartItems extends HTMLElement {
       .finally(() => {
         this.disableLoading(line);
       });
+  }
+
+  adjust_bundle_product(parsedState){
+    
+    var items = parsedState.items;
+    var jacketPresent = false;
+    var handbagpresent = false;
+    for(var i=0 ; i<items.length; ++i){
+      if(items[i].variant_id == 46819811885370){
+        jacketPresent = true;
+      }
+      if(items[i].variant_id == 46842839466298){
+        handbagpresent = true;
+      }
+    }
+  
+    if(jacketPresent == true && handbagpresent == false){
+      var jacketLine = document.querySelector('[data-quantity-variant-id="46819811885370"]');
+      this.updateQuantity(jacketLine.dataset.index, 0);
+    }
   }
 
   updateLiveRegions(line, message) {
@@ -244,3 +267,4 @@ if (!customElements.get('cart-note')) {
     }
   );
 }
+
