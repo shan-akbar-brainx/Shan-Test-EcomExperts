@@ -38,6 +38,7 @@
               class="select__select my_custom_select"
               name="options[{{ option.name | escape }}]"
               form="{{ product_form_id }}"
+              autocomplete="off"
             >
               {% render 'product-variant-dropdown', product: product, option: option, block: block %}
             </select>
