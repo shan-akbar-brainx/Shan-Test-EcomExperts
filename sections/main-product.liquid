@@ -15,6 +15,17 @@
   {%- endif -%}
 
   {%- style -%}
+    .radio-image{
+      max-width: 42px;
+    }
+
+    .disabled-button{
+       pointer-events: none;
+    }
+    .disabled-form{
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -681,6 +692,32 @@
     }
   </script>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+   
+    var varient_select_default = document.querySelector(".my_custom_select");
+    
+    var option = document.querySelector(`[value="${varient_select_default.value}"]`);
+
+    var atc_btn = document.querySelector('.product-form__buttons');
+    var btn_form = document.querySelector('.custom-buttons-form');
+
+    if(varient_select_default.value == "Unselected"){
+      option.click();
+      atc_btn.classList.add("disabled-button");
+      btn_form.classList.add("disabled-form");
+    }
+    
+  });
+  var varient_select = document.querySelector(".my_custom_select");
+  
+  varient_select.addEventListener("change", function() {
+    var selectedOption = document.querySelector(`[value="${this.value}"]`);
+ 
+    selectedOption.click();
+  });
+</script>
 
 {% schema %}
 {

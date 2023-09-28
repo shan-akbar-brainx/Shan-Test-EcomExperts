@@ -22,15 +22,37 @@
       {{ block.shopify_attributes }}
     >
       {%- for option in product.options_with_values -%}
-        <fieldset class="js product-form__input">
+        
+        <fieldset class="js product-form__input" style="display:{% if option.name == "Size" %}none{% endif %};">
           <legend class="form__label">{{ option.name }}</legend>
           {% render 'product-variant-options', product: product, option: option, block: block %}
         </fieldset>
+        {% if option.name == "Size" %}
+          <div class="product-form__input product-form__input--dropdown">
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {{ option.name }}
+          </label>
+          <div class="select">
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select my_custom_select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+              autocomplete="off"
+            >
+              {% render 'product-variant-dropdown', product: product, option: option, block: block %}
+            </select>
+            {% render 'icon-caret' %}
+          </div>
+        </div>
+
+        {% endif %}
       {%- endfor -%}
       <script type="application/json">
         {{ product.variants | json }}
       </script>
     </variant-radios>
+
   {%- else -%}
     <variant-selects
       id="variant-selects-{{ section.id }}"
@@ -43,6 +65,7 @@
       {{ block.shopify_attributes }}
     >
       {%- for option in product.options_with_values -%}
+   
         <div class="product-form__input product-form__input--dropdown">
           <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
             {{ option.name }}
@@ -59,13 +82,15 @@
             {% render 'icon-caret' %}
           </div>
         </div>
-      {%- endfor -%}
 
+      {%- endfor -%}
+      
       <script type="application/json">
         {{ product.variants | json }}
       </script>
     </variant-selects>
   {%- endif -%}
+   
 {%- endunless -%}
 
 <noscript class="product-form__noscript-wrapper-{{ section.id }}">

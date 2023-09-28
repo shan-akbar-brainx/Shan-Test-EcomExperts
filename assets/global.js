@@ -965,7 +965,6 @@ class VariantSelects extends HTMLElement {
     this.updatePickupAvailability();
     this.removeErrorMessage();
     this.updateVariantStatuses();
-
     if (!this.currentVariant) {
       this.toggleAddButton(true, '', true);
       this.setUnavailable();
@@ -975,6 +974,16 @@ class VariantSelects extends HTMLElement {
       this.updateVariantInput();
       this.renderProductInfo();
       this.updateShareUrl();
+    }
+    var selectedSize = this.querySelector(".my_custom_select");
+    var atc_btn = document.querySelector('.product-form__buttons');
+    var btn_form = document.querySelector('.custom-buttons-form');
+    if(selectedSize.value == "Unselected"){
+      atc_btn.classList.add("disabled-button");
+      btn_form.classList.add("disabled-form");
+    }else{
+      atc_btn.classList.remove("disabled-button");
+      btn_form.classList.remove("disabled-form");
     }
   }
 
